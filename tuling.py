@@ -21,10 +21,6 @@ class Tuling(object):
 
     url = 'http://www.tuling123.com/openapi/api/v2'
 
-    req_header = {
-        'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
-    }
-
     def __init__(self, api_key=None):
         self.session = requests.Session()
         # noinspection SpellCheckingInspection
@@ -46,7 +42,7 @@ class Tuling(object):
             selfInfo = dict(location = dict(city = info.city, province = info.province, street = info.street))
         
         userInfo = dict(apiKey = self.api_key, userId = '123456789')
-        payload = dict(reqType = type, perception = perception, userInfo = userInfo)
+        payload = dict(reqType = type, perception = perception, selfInfo = selfInfo, userInfo = userInfo)
         payloadJson = json.dumps(payload)
         #logger.debug('Tuling payload:\n' + pprint.pformat(payload))
         print('Tuling payload:\n' + pprint.pformat(payload))
@@ -66,21 +62,29 @@ class Tuling(object):
             print('Tuling answer:\n' + pprint.pformat(answer))
             
             code = -1
+            resultUrl = ''
+            resultText = ''
             if answer:
-                code = answer.get('code', -1)
-                print('code is ')
-                print(code)
+                code = answer['intent']['code']
+                #print('code is ')
+                #print(code)
 
             if code >= 10000:
-                text = answer.get('text')
-                if not text:
-                    text = '我不明白你的意思'
-                url = answer.get('url')
-            else:
-                text = '我不明白你的意思'
-                url = ''
+                resultsList = answer['results']
+                for result in resultsList:
+                    resultType = result['resultType']
+                    resultValue = result['values']
+                    if resultType == 'url':
+                        resultUrl = resultValue['url']
+                    elif resultType == 'text':
+                        resultText = resultValue['text']
 
-            return dict(text = text, url = url)
+                if not resultText:
+                    resultText = '我不明白你的意思'
+            else:
+                resultText = '我不明白你的意思'
+
+            return dict(text = resultText, url = resultUrl)
 
         try:
             r = self.session.post(self.url, data=payloadJson)

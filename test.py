@@ -15,11 +15,16 @@ info = Info(city='杭州', province='浙江', street = '滨康路')
 async def event_gm(app: Mirai, friend: Friend, message: MessageChain):
     print(message.toString())
     reply = tuling.reply_text(0, message.toString(), info)
-    print(reply['text'])
-
-    await app.sendFriendMessage(friend, [
-        Plain(text="Hello, world!")
-    ])
+    
+    if reply['url'] != '':
+        print('sent url')
+        await app.sendFriendMessage(friend, [
+            Plain(text=reply['url']), Plain(text=reply['text'])
+        ])
+    else:
+        await app.sendFriendMessage(friend, [
+                Plain(text=reply['text'])
+            ])
 
 @app.receiver("GroupMessage")
 async def event_gm(app: Mirai, group: Group, message: MessageChain):
