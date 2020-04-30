@@ -97,8 +97,9 @@ class Tuling(object):
     def reply_text(self, type, msg, info):
         """
         返回消息的答复文本
-        :param msg: Message 对象
-        :param at_member: 若消息来自群聊，回复时 @发消息的群成员
+        :param type: 消息类型 0：text 1：图片 2：音频
+        :param msg: text文本或者url
+        :param info: 用户参数
         :return: 答复文本
         :rtype: dict
         """

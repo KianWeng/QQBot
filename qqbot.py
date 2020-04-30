@@ -8,7 +8,7 @@ authKey = 'adhekYgFgrf' # 字段 authKey 的值
 mirai_api_http_locate = 'localhost:8080/ws' # httpapi所在主机的地址端口,如果 setting.yml 文件里字段 "enableWebsocket" 的值为 "true" 则需要将 "/" 换成 "/ws", 否则将接收不到消息.
 
 app = Mirai(host="localhost", port="8080", authKey=authKey, qq=qq, websocket=True)
-tuling = Tuling(api_key='893c8f721584495eadca99f01ec263d5') 
+tuling = Tuling(api_key='XXX') #xxx图灵机器人apikey
 info = Info(city='杭州', province='浙江', street = '滨康路')
 
 @app.receiver("FriendMessage")
